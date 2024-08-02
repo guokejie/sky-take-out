@@ -16,7 +16,7 @@ spring:
 mybatis:
   #mapper配置文件
   mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.sky.entity
+  type-aliases-package: com.sky.entity # 为实体创建别名
   configuration:
     #开启驼峰命名
     map-underscore-to-camel-case: true
