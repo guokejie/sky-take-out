@@ -3,12 +3,16 @@ package com.sky.controller.admin;
 
 import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
+import com.sky.entity.Category;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.CategoryService;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/category")
@@ -40,5 +44,50 @@ public class CategoryController {
         PageResult pageResult = categoryService.pageQuery(categoryPageQueryDTO);
         // 返回的数据里面有total和records，所以需要封装
         return Result.success(pageResult);
+    }
+
+
+    /**
+     * 修改分类
+     *
+     * @param categoryDTO
+     * @return
+     */
+    @PutMapping
+    // Body参数，所以
+    public Result update(@RequestBody CategoryDTO categoryDTO) {
+        categoryService.update(categoryDTO);
+        return Result.success();
+    }
+
+    /**
+     * 启用禁用分类
+     * @param status
+     * @param id
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    public Result startOrStop(@PathVariable Integer status, Long id) {
+        categoryService.startOrStop(status, id);
+        return Result.success();
+    }
+
+    /**
+     * 根据类型查询分类
+     * @param type
+     * @return
+     */
+    @GetMapping("/list")
+    public Result<List<Category>> list(Integer type) {
+        List<Category> list = categoryService.list(type);
+        return Result.success(list);
+    }
+
+
+    @DeleteMapping
+    public Result deleteById(Long id) {
+        log.info("删除分类：{}", id);
+        categoryService.deleteById(id);
+        return Result.success();
     }
 }
