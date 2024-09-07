@@ -9,6 +9,7 @@ import com.sky.service.DishService;
 import com.sky.service.SetmealService;
 import com.sky.vo.DishItemVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,7 @@ public class SetmealController {
      * @param categoryId
      * @return
      */
+    @Cacheable(cacheNames = "setmealCache",key = "#categoryId") // key：setMealCache::categoryId，具体的值就是函数的返回值
     @GetMapping("/list")
     public Result<List<Setmeal>> list(Long categoryId) {
         Setmeal setmeal = new Setmeal();

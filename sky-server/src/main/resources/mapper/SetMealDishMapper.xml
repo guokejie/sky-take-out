@@ -3,6 +3,19 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sky.mapper.SetMealDishMapper">
+    <!--
+    parameterType="list"：表示传进来的参数是一个列表
+    -->
+    <insert id="insertBatch" parameterType="list">
+        insert into setmeal_dish
+        (setmeal_id, dish_id, name, price, copies)
+        values
+        <!--这个的意思就是一次性把所有要插入的都遍历出来了-->
+        <foreach collection="setmealDishes" item="sd" separator=",">
+            (#{sd.setmealId},#{sd.dishId},#{sd.name},#{sd.price},#{sd.copies})
+        </foreach>
+
+    </insert>
 
 
     <select id="getSetMealDishIds" resultType="java.lang.Long">
