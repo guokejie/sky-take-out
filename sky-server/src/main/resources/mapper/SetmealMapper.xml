@@ -31,5 +31,26 @@
             </if>
         </where>
     </select>
-
+    <select id="pageQuery" resultType="com.sky.vo.SetmealVO">
+        select
+        s.*, c.name categoryName
+        from
+        setmeal s
+        left join
+        category c
+        on
+        <!--setmeal表里面没有categoryName，但是category表里面有，所以要联表-->
+        s.category_id = c.id
+        <where>
+            <if test="name != null">
+                and s.name like concat('%',#{name},'%')
+            </if>
+            <if test="status != null">
+                and s.status=#{status}
+            </if>
+            <if test="categoryId != null">
+                s.category_id = #{categoryId}
+            </if>
+        </where>
+    </select>
 </mapper>

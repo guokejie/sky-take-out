@@ -1,14 +1,24 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Constant;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.sky.constant.MessageConstant;
+import com.sky.constant.StatusConstant;
 import com.sky.dto.SetmealDTO;
+import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
+import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.SetMealDishMapper;
 import com.sky.mapper.SetmealMapper;
+import com.sky.result.PageResult;
 import com.sky.service.SetmealService;
 import com.sky.vo.DishItemVO;
+import com.sky.vo.SetmealVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,6 +71,41 @@ public class SetmealServiceImpl implements SetmealService {
         setMealDishMapper.insertBatch(setmealDishes);
 
 
+    }
+
+    // TODO：分页查询
+    @Override
+    public PageResult pageQuery(SetmealPageQueryDTO setmealPageQueryDTO) {
+        int pageNum = setmealPageQueryDTO.getPage();
+        int pageSize = setmealPageQueryDTO.getPageSize();
+        PageHelper.startPage(pageNum, pageSize);
+        Page<SetmealVO> page = setmealMapper.pageQuery(setmealPageQueryDTO);
+        return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    // TODO：批量删除套餐
+    @Override
+    @Transactional
+    // 无法精确清理，因为这里是ids，全部清理
+    @CacheEvict(cacheNames = "setmealCache", allEntries = true)
+    public void deleteBatch(List<Long> ids) {
+        ids.forEach(id -> {
+            // 根据id查询这个套餐
+            Setmeal setmeal = setmealMapper.getById(id);
+            // 判断其是否处于起售阶段，如果是起售则不能删除
+            if (StatusConstant.ENABLE.equals(setmeal.getStatus())) {
+                throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ON_SALE);
+            }
+            // 允许删除
+            ids.forEach(setmealId -> {
+                // 删除套餐中的数据
+                setmealMapper.deleteById(setmealId);
+                // 删除套餐菜品关系表中的数据
+                setMealDishMapper.deleteBySetmealId(setmealId);
+            });
+        });
 
     }
+
+
 }
