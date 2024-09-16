@@ -45,4 +45,20 @@
         </set>
         where id = #{id}
     </update>
+    <select id="sumByMap" resultType="java.lang.Double">
+        select sum(amount)
+        from orders
+        <where>
+            <!--这里的begin,end,status一定要和map中的key一致-->
+            <if test="begin!=null">
+                and order_time &gt; #{begin}
+            </if>
+            <if test="end!=null">
+                and order_time &lt; #{end}
+            </if>
+            <if test="status!=null">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
 </mapper>
