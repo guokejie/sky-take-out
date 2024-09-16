@@ -97,6 +97,7 @@
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
 
+        <!--导入websocket坐标-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
