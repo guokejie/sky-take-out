@@ -6,7 +6,7 @@ import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
 
 public interface OrderService {
-    OrderSubmitVO submitOrder(OrdersSubmitDTO ordersSubmitDTO);
+
 
     /**
      * 订单支付
@@ -22,4 +22,14 @@ public interface OrderService {
      * @param outTradeNo
      */
     void paySuccess(String outTradeNo);
+
+
+    OrderSubmitVO submitOrder(OrdersSubmitDTO ordersSubmitDTO);
+
+    /**
+     * 客户催单
+     *
+     * @param id
+     */
+    void reminder(Long id);
 }
