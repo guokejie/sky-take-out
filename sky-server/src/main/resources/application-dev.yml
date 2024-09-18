@@ -11,3 +11,15 @@ sky:
     access-key-id: LTAI5t9yCCtHdGaZKCGdfws4
     access-key-secret: wbSKHePbEcpqIZeZU1xl9oLzBlNoj1
     bucket-name: kj-sky-itcast
+
+  redis:
+    host: localhost
+    port: 6379
+    database: 10
+#  wechat:
+#    appid:
+#    secret:
+#    mchid:
+#    mchSerialNo:
+#    privateKeyFilePath:
+#    apiV3Key:
